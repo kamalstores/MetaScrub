@@ -175,7 +175,7 @@ async function stripVideoMeta(file: File): Promise<Blob> {
 
     const data = await ffmpeg.readFile(outputName);
     const uint8 = data instanceof Uint8Array ? data : new TextEncoder().encode(String(data));
-    return new Blob([uint8], { type: 'video/mp4' });
+    return new Blob([uint8 as any], { type: 'video/mp4' });
   } catch {
     // Fallback: return original file as blob if ffmpeg fails
     return file;
