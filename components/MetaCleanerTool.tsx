@@ -406,7 +406,7 @@ export default function MetaCleanerTool() {
               🔍 Metadata found in <span style={{ color: 'var(--violet-light)' }}>{selected.file.name}</span>
             </h3>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Toggle off = strip from output
+              Turn ON to remove metadata
             </div>
           </div>
           <div className="meta-toggles">
