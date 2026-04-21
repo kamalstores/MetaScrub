@@ -78,7 +78,7 @@ async function extractImageMeta(file: File): Promise<MetaField[]> {
           icon: cfg.icon,
           sensitivity: cfg.sensitivity,
           value: String(tag.description).slice(0, 80),
-          strip: cfg.sensitivity === 'high' || cfg.sensitivity === 'medium',
+          strip: false,
         });
       }
     }
@@ -111,12 +111,12 @@ async function extractImageMeta(file: File): Promise<MetaField[]> {
 /* ─── Utility: Extract video metadata via filename/type ─── */
 async function extractVideoMeta(file: File): Promise<MetaField[]> {
   const fields: MetaField[] = [
-    { key: 'filename',  label: 'Filename',     icon: '📁', sensitivity: 'medium', value: file.name,                    strip: true },
+    { key: 'filename',  label: 'Filename',     icon: '📁', sensitivity: 'medium', value: file.name,                    strip: false },
     { key: 'mimetype',  label: 'MIME Type',    icon: '⚙️', sensitivity: 'low',    value: file.type,                    strip: false },
     { key: 'size',      label: 'File Size',    icon: '📦', sensitivity: 'low',    value: fmtBytes(file.size),          strip: false },
-    { key: 'lastmod',   label: 'Last Modified',icon: '🕒', sensitivity: 'medium', value: new Date(file.lastModified).toLocaleString(), strip: true },
-    { key: 'gps_strip', label: 'GPS Track',    icon: '📍', sensitivity: 'high',   value: 'Strip embedded GPS metadata',strip: true },
-    { key: 'meta_atoms',label: 'Metadata Atoms',icon: '🗂️', sensitivity: 'medium',value: 'moov/udta/©* atoms',        strip: true },
+    { key: 'lastmod',   label: 'Last Modified',icon: '🕒', sensitivity: 'medium', value: new Date(file.lastModified).toLocaleString(), strip: false },
+    { key: 'gps_strip', label: 'GPS Track',    icon: '📍', sensitivity: 'high',   value: 'Strip embedded GPS metadata',strip: false },
+    { key: 'meta_atoms',label: 'Metadata Atoms',icon: '🗂️', sensitivity: 'medium',value: 'moov/udta/©* atoms',        strip: false },
     { key: 'encoder',   label: 'Encoder Info', icon: '💻', sensitivity: 'low',    value: 'Encoder/software strings',   strip: false },
   ];
   return fields;
@@ -238,6 +238,30 @@ export default function MetaCleanerTool() {
         ...f,
         metaFields: f.metaFields.map(mf =>
           mf.key === fieldKey ? { ...mf, strip: !mf.strip } : mf
+        ),
+      };
+    }));
+  }, []);
+
+  const toggleAllStrips = useCallback((fileId: string, forceState: boolean) => {
+    setFiles(prev => prev.map(f => {
+      if (f.id !== fileId) return f;
+      return {
+        ...f,
+        metaFields: f.metaFields.map(mf =>
+          mf.key === 'none' ? mf : { ...mf, strip: forceState }
+        ),
+      };
+    }));
+  }, []);
+
+  const toggleSmartStrips = useCallback((fileId: string) => {
+    setFiles(prev => prev.map(f => {
+      if (f.id !== fileId) return f;
+      return {
+        ...f,
+        metaFields: f.metaFields.map(mf =>
+          mf.key === 'none' ? mf : { ...mf, strip: mf.sensitivity === 'high' || mf.sensitivity === 'medium' }
         ),
       };
     }));
@@ -405,8 +429,34 @@ export default function MetaCleanerTool() {
             <h3 className="meta-panel-title">
               🔍 Metadata found in <span style={{ color: 'var(--violet-light)' }}>{selected.file.name}</span>
             </h3>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Turn ON to remove metadata
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                Turn ON to remove metadata
+              </div>
+              {selected.metaFields.some(mf => mf.key !== 'none') && (
+                <>
+                  <button
+                    type="button"
+                    className="btn-github"
+                    style={{ padding: '4px 8px', fontSize: '0.75rem' }}
+                    onClick={() => toggleSmartStrips(selected.id)}
+                  >
+                    Auto Select (High/Medium)
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-github"
+                    style={{ padding: '4px 8px', fontSize: '0.75rem' }}
+                    onClick={() => {
+                      const toggleableFields = selected.metaFields.filter(f => f.key !== 'none');
+                      const allSelected = toggleableFields.every(f => f.strip);
+                      toggleAllStrips(selected.id, !allSelected);
+                    }}
+                  >
+                    {selected.metaFields.filter(f => f.key !== 'none').every(f => f.strip) ? 'Deselect All' : 'Select All'}
+                  </button>
+                </>
+              )}
             </div>
           </div>
           <div className="meta-toggles">
