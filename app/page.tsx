@@ -172,7 +172,7 @@ export default function Home() {
               🧹 Clean Files Now
             </a>
             <a
-              href="https://github.com/kamalstores"
+              href="https://github.com/kamalstores/MetaScrub"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-secondary"
