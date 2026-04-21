@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ToastProvider from "@/components/ToastProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "MetaScrub",
@@ -39,6 +40,7 @@ export default function RootLayout({
           <Footer />
         </div>
         <ToastProvider />
+        <Analytics />
       </body>
     </html>
   );
