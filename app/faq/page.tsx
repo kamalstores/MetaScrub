@@ -54,8 +54,6 @@ const faqs = [
   },
 ];
 
-const categories = ['All Questions', 'Privacy', 'Technical', 'File Support', 'Usage'];
-
 export default function FAQPage() {
   const [open, setOpen] = useState<number | null>(0);
 
