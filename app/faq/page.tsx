@@ -124,7 +124,7 @@ export default function FAQPage() {
             </p>
             <div style={{ display: 'flex', gap: '12px' }}>
               <a
-                href="https://github.com/kamalstores"
+                href="https://github.com/kamalstores/MetaScrub"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-github"

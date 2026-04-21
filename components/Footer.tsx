@@ -9,7 +9,7 @@ export default function Footer() {
           <Link href="/how-it-works" className="footer-link">How It Works</Link>
           <Link href="/faq" className="footer-link">FAQ</Link>
           <a
-            href="https://github.com/kamalstores"
+            href="https://github.com/kamalstores/MetaScrub"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link"
