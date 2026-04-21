@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import ToastProvider from "@/components/ToastProvider";
 
 export const metadata: Metadata = {
-  title: "MetaScrub — Strip Hidden Metadata from Photos & Videos Privately",
+  title: "MetaScrub",
   description:
     "Remove GPS coordinates, device info, and hidden metadata from your photos and videos — 100% in your browser. Zero uploads. Zero servers. Absolute privacy.",
   keywords: ["metadata remover", "EXIF remover", "privacy tool", "GPS remover", "photo metadata", "browser tool"],
